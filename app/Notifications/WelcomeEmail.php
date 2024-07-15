@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\User;
+use App\Models\Voucher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -15,7 +16,7 @@ class WelcomeEmail extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(private User $user)
+    public function __construct(private User $user, private Voucher $voucher)
     {
     }
 
@@ -39,9 +40,10 @@ class WelcomeEmail extends Notification
                 'emails.welcome-email',
                 [
                     'user' => $this->user,
+                    'code' => $this->voucher->code
                 ]
             )
-            ->from('support@company.com', 'Company Name')
+            ->from('hello@example.com', 'Company Name')
             ->subject('Welcome!');
     }
 }

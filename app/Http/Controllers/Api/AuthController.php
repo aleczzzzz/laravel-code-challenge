@@ -11,6 +11,7 @@ use App\Services\VoucherService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -25,7 +26,9 @@ class AuthController extends Controller
 
             $user = User::create($registerRequest->validated());
 
-            $this->voucherService->createVoucherForUser($user);
+            $voucher = $this->voucherService->createVoucherForUser($user);
+
+            $user->notify(new WelcomeEmail($user, $voucher));
 
             DB::commit();
         } catch (\Throwable $th) {
